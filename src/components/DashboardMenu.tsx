@@ -1,9 +1,16 @@
-
 import * as React from "react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetClose,
+} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu, ChevronRight, ChevronLeft } from "lucide-react";
+import { Menu, ChevronRight, ChevronLeft, User, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
 
 interface MenuItem {
   label: string;
@@ -23,7 +30,7 @@ const MENU: MenuItem[] = [
     subItems: [
       { label: "Set/View Goals", path: "/goals" },
       { label: "Goals Reports", path: "/goals-reports" },
-    ]
+    ],
   },
   {
     label: "Progress",
@@ -36,7 +43,7 @@ const MENU: MenuItem[] = [
       { label: "Video Training", path: "/video-training" },
       { label: "Normal Training", path: "/start-workout" },
       { label: "Food Preparation", path: "/food-preparation" },
-    ]
+    ],
   },
   {
     label: "Health",
@@ -44,7 +51,7 @@ const MENU: MenuItem[] = [
       { label: "Health Insights", path: "/health" },
       { label: "BMI Reports", path: "/bmi-reports" },
       { label: "Body Analysis", path: "/body-analysis" },
-    ]
+    ],
   },
   {
     label: "Workout Reports",
@@ -112,31 +119,30 @@ export function DashboardMenu() {
             )}
           </SheetHeader>
           <div className="p-6 space-y-2">
-            {!selectedMenu
-              ? MENU.map((item) => (
+            {!selectedMenu ? (
+              MENU.map((item) => (
+                <button
+                  key={item.label}
+                  className="w-full flex items-center justify-between px-3 py-3 rounded hover:bg-gray-800 text-white text-left"
+                  onClick={() => handleMainClick(item)}
+                >
+                  <span className="text-base">{item.label}</span>
+                  {item.subItems ? <ChevronRight className="w-4 h-4" /> : null}
+                </button>
+              ))
+            ) : (
+              <div className="space-y-2">
+                {selectedMenu.subItems?.map((sub) => (
                   <button
-                    key={item.label}
-                    className="w-full flex items-center justify-between px-3 py-3 rounded hover:bg-gray-800 text-white text-left"
-                    onClick={() => handleMainClick(item)}
+                    key={sub.label}
+                    className="w-full text-left px-3 py-3 rounded hover:bg-gray-800 text-white"
+                    onClick={() => handleSubItemClick(sub.path)}
                   >
-                    <span className="text-base">{item.label}</span>
-                    {item.subItems ? <ChevronRight className="w-4 h-4" /> : null}
+                    {sub.label}
                   </button>
-                ))
-              : (
-                <div className="space-y-2">
-                  {selectedMenu.subItems?.map((sub) => (
-                    <button
-                      key={sub.label}
-                      className="w-full text-left px-3 py-3 rounded hover:bg-gray-800 text-white"
-                      onClick={() => handleSubItemClick(sub.path)}
-                    >
-                      {sub.label}
-                    </button>
-                  ))}
-                </div>
-              )
-            }
+                ))}
+              </div>
+            )}
           </div>
         </SheetContent>
       </Sheet>
