@@ -61,6 +61,10 @@ const MENU: MenuItem[] = [
     label: "Accessories",
     path: "/my-cart",
   },
+  {
+    label: "Profile",
+    path: "/profile",
+  },
 ];
 
 export function DashboardMenu() {
