@@ -93,6 +93,21 @@ export function DashboardMenu() {
     setSelectedMenu(null);
   };
 
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      setOpen(false);
+      navigate("/");
+    } catch (error) {
+      console.error("Error signing out:", error);
+      toast({
+        title: "Error",
+        description: "Failed to sign out. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <>
       <Button
