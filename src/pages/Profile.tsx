@@ -315,7 +315,7 @@ export default function Profile() {
             <div className="flex justify-between pt-6">
               <Button
                 variant="outline"
-                onClick={signOut}
+                onClick={handleSignOut}
                 className="border-red-500 text-red-400 hover:bg-red-950"
               >
                 Sign Out
