@@ -141,16 +141,29 @@ export function DashboardMenu() {
           </SheetHeader>
           <div className="p-6 space-y-2">
             {!selectedMenu ? (
-              MENU.map((item) => (
-                <button
-                  key={item.label}
-                  className="w-full flex items-center justify-between px-3 py-3 rounded hover:bg-gray-800 text-white text-left"
-                  onClick={() => handleMainClick(item)}
-                >
-                  <span className="text-base">{item.label}</span>
-                  {item.subItems ? <ChevronRight className="w-4 h-4" /> : null}
-                </button>
-              ))
+              <>
+                {MENU.map((item) => (
+                  <button
+                    key={item.label}
+                    className="w-full flex items-center justify-between px-3 py-3 rounded hover:bg-gray-800 text-white text-left"
+                    onClick={() => handleMainClick(item)}
+                  >
+                    <span className="text-base">{item.label}</span>
+                    {item.subItems ? (
+                      <ChevronRight className="w-4 h-4" />
+                    ) : null}
+                  </button>
+                ))}
+                <div className="border-t border-gray-700 pt-2 mt-4">
+                  <button
+                    className="w-full flex items-center gap-3 px-3 py-3 rounded hover:bg-red-900/20 text-red-400 text-left"
+                    onClick={handleSignOut}
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span className="text-base">Sign Out</span>
+                  </button>
+                </div>
+              </>
             ) : (
               <div className="space-y-2">
                 {selectedMenu.subItems?.map((sub) => (
