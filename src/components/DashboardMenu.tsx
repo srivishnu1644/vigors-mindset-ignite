@@ -71,6 +71,8 @@ export function DashboardMenu() {
   const [open, setOpen] = React.useState(false);
   const [selectedMenu, setSelectedMenu] = React.useState<MenuItem | null>(null);
   const navigate = useNavigate();
+  const { signOut } = useAuth();
+  const { toast } = useToast();
 
   const handleMainClick = (item: MenuItem) => {
     if (item.subItems) {
