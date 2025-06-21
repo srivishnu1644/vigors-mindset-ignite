@@ -307,9 +307,10 @@ export function Signup({
 
               <Button
                 type="submit"
-                className="w-full bg-white/95 hover:bg-white text-black font-semibold py-3"
+                disabled={isLoading}
+                className="w-full bg-white/95 hover:bg-white text-black font-semibold py-3 disabled:opacity-50"
               >
-                Create Account
+                {isLoading ? "Creating Account..." : "Create Account"}
               </Button>
             </form>
 
