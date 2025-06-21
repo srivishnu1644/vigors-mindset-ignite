@@ -117,6 +117,37 @@ export const Auth = () => {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate required fields
+    if (!signInData.email.trim()) {
+      toast({
+        title: "Email Required",
+        description: "Please enter your email address to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!signInData.password.trim()) {
+      toast({
+        title: "Password Required",
+        description: "Please enter your password to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(signInData.email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
