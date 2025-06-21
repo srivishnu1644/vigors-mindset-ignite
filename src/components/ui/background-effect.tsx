@@ -20,8 +20,9 @@ function FloatingPaths({ position }: { position: number }) {
     <div className="absolute inset-0 pointer-events-none">
       <svg
         className="w-full h-full text-white dark:text-white"
-        viewBox="0 0 696 316"
+        viewBox="0 0 1920 1080"
         fill="none"
+        preserveAspectRatio="xMidYMid slice"
       >
         <title>Background Paths</title>
         {paths.map((path) => (
@@ -30,15 +31,15 @@ function FloatingPaths({ position }: { position: number }) {
             d={path.d}
             stroke="currentColor"
             strokeWidth={path.width}
-            strokeOpacity={0.1 + path.id * 0.03}
-            initial={{ pathLength: 0.3, opacity: 0.6 }}
+            strokeOpacity={0.15 + path.id * 0.02}
+            initial={{ pathLength: 0.2, opacity: 0.4 }}
             animate={{
               pathLength: 1,
-              opacity: [0.3, 0.6, 0.3],
+              opacity: [0.2, 0.8, 0.2],
               pathOffset: [0, 1, 0],
             }}
             transition={{
-              duration: 20 + Math.random() * 10,
+              duration: 15 + Math.random() * 15,
               repeat: Number.POSITIVE_INFINITY,
               ease: "linear",
             }}
