@@ -1,8 +1,14 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PasswordInput } from "@/components/ui/password-input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -17,16 +23,66 @@ export const Auth = () => {
     password: "",
     fullName: "",
     phone: "",
-    dateOfBirth: ""
+    dateOfBirth: "",
   });
 
   const [signInData, setSignInData] = useState({
     email: "",
-    password: ""
+    password: "",
   });
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate required fields
+    if (!signUpData.fullName.trim()) {
+      toast({
+        title: "Full Name Required",
+        description: "Please enter your full name to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!signUpData.email.trim()) {
+      toast({
+        title: "Email Required",
+        description: "Please enter your email address to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!signUpData.password.trim()) {
+      toast({
+        title: "Password Required",
+        description: "Please create a password to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(signUpData.email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Password length validation
+    if (signUpData.password.length < 6) {
+      toast({
+        title: "Password Too Short",
+        description: "Password must be at least 6 characters long.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -37,9 +93,9 @@ export const Auth = () => {
           data: {
             full_name: signUpData.fullName,
             phone: signUpData.phone,
-            date_of_birth: signUpData.dateOfBirth
-          }
-        }
+            date_of_birth: signUpData.dateOfBirth,
+          },
+        },
       });
 
       if (error) throw error;
@@ -61,6 +117,37 @@ export const Auth = () => {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate required fields
+    if (!signInData.email.trim()) {
+      toast({
+        title: "Email Required",
+        description: "Please enter your email address to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!signInData.password.trim()) {
+      toast({
+        title: "Password Required",
+        description: "Please enter your password to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(signInData.email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -69,7 +156,24 @@ export const Auth = () => {
         password: signInData.password,
       });
 
-      if (error) throw error;
+      if (error) {
+        // Check if the error is because user doesn't exist
+        if (
+          error.message.includes("Invalid login credentials") ||
+          error.message.includes("User not found") ||
+          error.message.includes("Email not confirmed")
+        ) {
+          toast({
+            title: "Account Not Found",
+            description:
+              "No account found with this email. Please create an account first by switching to the Sign Up tab.",
+            variant: "destructive",
+          });
+          return;
+        }
+        // Other authentication errors
+        throw error;
+      }
 
       toast({
         title: "Welcome back, warrior!",
@@ -78,7 +182,8 @@ export const Auth = () => {
     } catch (error: any) {
       toast({
         title: "Sign in failed",
-        description: error.message,
+        description:
+          error.message || "An unexpected error occurred. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -91,7 +196,10 @@ export const Auth = () => {
       <Card className="w-full max-w-md bg-black/80 backdrop-blur-sm border-purple-500/20">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold text-white mb-2">
-            JOIN THE <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">VIGORS CLUB</span>
+            JOIN THE{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
+              VIGORS CLUB
+            </span>
           </CardTitle>
           <CardDescription className="text-gray-300">
             Transform your body, elevate your mind
@@ -103,7 +211,7 @@ export const Auth = () => {
               <TabsTrigger value="signup">Sign Up</TabsTrigger>
               <TabsTrigger value="signin">Sign In</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="signup">
               <form onSubmit={handleSignUp} className="space-y-4">
                 <div className="relative">
@@ -112,7 +220,9 @@ export const Auth = () => {
                     type="text"
                     placeholder="Full Name"
                     value={signUpData.fullName}
-                    onChange={(e) => setSignUpData({...signUpData, fullName: e.target.value})}
+                    onChange={(e) =>
+                      setSignUpData({ ...signUpData, fullName: e.target.value })
+                    }
                     className="pl-10 bg-gray-800 border-gray-600 text-white"
                     required
                   />
@@ -123,18 +233,21 @@ export const Auth = () => {
                     type="email"
                     placeholder="Email"
                     value={signUpData.email}
-                    onChange={(e) => setSignUpData({...signUpData, email: e.target.value})}
+                    onChange={(e) =>
+                      setSignUpData({ ...signUpData, email: e.target.value })
+                    }
                     className="pl-10 bg-gray-800 border-gray-600 text-white"
                     required
                   />
                 </div>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                  <Input
-                    type="password"
+                  <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400 z-10" />
+                  <PasswordInput
                     placeholder="Password"
                     value={signUpData.password}
-                    onChange={(e) => setSignUpData({...signUpData, password: e.target.value})}
+                    onChange={(e) =>
+                      setSignUpData({ ...signUpData, password: e.target.value })
+                    }
                     className="pl-10 bg-gray-800 border-gray-600 text-white"
                     required
                   />
@@ -145,7 +258,9 @@ export const Auth = () => {
                     type="tel"
                     placeholder="Phone (optional)"
                     value={signUpData.phone}
-                    onChange={(e) => setSignUpData({...signUpData, phone: e.target.value})}
+                    onChange={(e) =>
+                      setSignUpData({ ...signUpData, phone: e.target.value })
+                    }
                     className="pl-10 bg-gray-800 border-gray-600 text-white"
                   />
                 </div>
@@ -155,20 +270,27 @@ export const Auth = () => {
                     type="date"
                     placeholder="Date of Birth"
                     value={signUpData.dateOfBirth}
-                    onChange={(e) => setSignUpData({...signUpData, dateOfBirth: e.target.value})}
+                    onChange={(e) =>
+                      setSignUpData({
+                        ...signUpData,
+                        dateOfBirth: e.target.value,
+                      })
+                    }
                     className="pl-10 bg-gray-800 border-gray-600 text-white"
                   />
                 </div>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
                   disabled={isLoading}
                 >
-                  {isLoading ? "Creating Account..." : "START YOUR TRANSFORMATION"}
+                  {isLoading
+                    ? "Creating Account..."
+                    : "START YOUR TRANSFORMATION"}
                 </Button>
               </form>
             </TabsContent>
-            
+
             <TabsContent value="signin">
               <form onSubmit={handleSignIn} className="space-y-4">
                 <div className="relative">
@@ -177,24 +299,27 @@ export const Auth = () => {
                     type="email"
                     placeholder="Email"
                     value={signInData.email}
-                    onChange={(e) => setSignInData({...signInData, email: e.target.value})}
+                    onChange={(e) =>
+                      setSignInData({ ...signInData, email: e.target.value })
+                    }
                     className="pl-10 bg-gray-800 border-gray-600 text-white"
                     required
                   />
                 </div>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                  <Input
-                    type="password"
+                  <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400 z-10" />
+                  <PasswordInput
                     placeholder="Password"
                     value={signInData.password}
-                    onChange={(e) => setSignInData({...signInData, password: e.target.value})}
+                    onChange={(e) =>
+                      setSignInData({ ...signInData, password: e.target.value })
+                    }
                     className="pl-10 bg-gray-800 border-gray-600 text-white"
                     required
                   />
                 </div>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
                   disabled={isLoading}
                 >

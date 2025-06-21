@@ -1,12 +1,17 @@
-
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ArrowLeft, Save, Upload, User } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -29,22 +34,22 @@ export default function Profile() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  
+
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [profileData, setProfileData] = useState({
-    full_name: user?.user_metadata?.full_name || '',
-    gender: user?.user_metadata?.gender || '',
-    age: user?.user_metadata?.age || '',
-    phone: user?.user_metadata?.phone || '',
-    country_code: user?.user_metadata?.country_code || '+1',
-    email: user?.email || '',
-    avatar_url: user?.user_metadata?.avatar_url || ''
+    full_name: user?.user_metadata?.full_name || "",
+    gender: user?.user_metadata?.gender || "",
+    age: user?.user_metadata?.age || "",
+    phone: user?.user_metadata?.phone || "",
+    country_code: user?.user_metadata?.country_code || "+1",
+    email: user?.email || "",
+    avatar_url: user?.user_metadata?.avatar_url || "",
   });
 
   const handleSave = async () => {
     if (!user) return;
-    
+
     setIsSaving(true);
     try {
       const { error } = await supabase.auth.updateUser({
@@ -54,8 +59,8 @@ export default function Profile() {
           age: profileData.age,
           phone: profileData.phone,
           country_code: profileData.country_code,
-          avatar_url: profileData.avatar_url
-        }
+          avatar_url: profileData.avatar_url,
+        },
       });
 
       if (error) throw error;
@@ -66,7 +71,7 @@ export default function Profile() {
       });
       setIsEditing(false);
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.error("Error updating profile:", error);
       toast({
         title: "Error",
         description: "Failed to update profile. Please try again.",
@@ -77,21 +82,35 @@ export default function Profile() {
     }
   };
 
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      navigate("/");
+    } catch (error) {
+      console.error("Error signing out:", error);
+      toast({
+        title: "Error",
+        description: "Failed to sign out. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       // For now, we'll just create a local URL
       // In a real app, you'd upload to Supabase Storage
       const imageUrl = URL.createObjectURL(file);
-      setProfileData(prev => ({ ...prev, avatar_url: imageUrl }));
+      setProfileData((prev) => ({ ...prev, avatar_url: imageUrl }));
     }
   };
 
   const getInitials = (name: string) => {
     return name
-      .split(' ')
-      .map(word => word.charAt(0))
-      .join('')
+      .split(" ")
+      .map((word) => word.charAt(0))
+      .join("")
       .toUpperCase()
       .slice(0, 2);
   };
@@ -104,7 +123,7 @@ export default function Profile() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate("/dashboard")}
             className="text-white hover:bg-gray-800"
           >
             <ArrowLeft className="w-5 h-5" />
@@ -128,7 +147,9 @@ export default function Profile() {
               <Avatar className="w-24 h-24">
                 <AvatarImage src={profileData.avatar_url} />
                 <AvatarFallback className="bg-purple-600 text-white text-xl">
-                  {profileData.full_name ? getInitials(profileData.full_name) : 'U'}
+                  {profileData.full_name
+                    ? getInitials(profileData.full_name)
+                    : "U"}
                 </AvatarFallback>
               </Avatar>
               {isEditing && (
@@ -141,7 +162,11 @@ export default function Profile() {
                     id="avatar-upload"
                   />
                   <label htmlFor="avatar-upload">
-                    <Button variant="outline" size="sm" className="cursor-pointer border-purple-500 text-purple-300 hover:bg-purple-950">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="cursor-pointer border-purple-500 text-purple-300 hover:bg-purple-950"
+                    >
                       <Upload className="w-4 h-4 mr-2" />
                       Upload Picture
                     </Button>
@@ -154,11 +179,18 @@ export default function Profile() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Full Name */}
               <div className="space-y-2">
-                <Label htmlFor="full_name" className="text-gray-300">Full Name</Label>
+                <Label htmlFor="full_name" className="text-gray-300">
+                  Full Name
+                </Label>
                 <Input
                   id="full_name"
                   value={profileData.full_name}
-                  onChange={(e) => setProfileData(prev => ({ ...prev, full_name: e.target.value }))}
+                  onChange={(e) =>
+                    setProfileData((prev) => ({
+                      ...prev,
+                      full_name: e.target.value,
+                    }))
+                  }
                   disabled={!isEditing}
                   className="bg-gray-800 border-gray-600 text-white disabled:opacity-50"
                 />
@@ -166,9 +198,16 @@ export default function Profile() {
 
               {/* Gender */}
               <div className="space-y-2">
-                <Label htmlFor="gender" className="text-gray-300">Gender</Label>
+                <Label htmlFor="gender" className="text-gray-300">
+                  Gender
+                </Label>
                 {isEditing ? (
-                  <Select value={profileData.gender} onValueChange={(value) => setProfileData(prev => ({ ...prev, gender: value }))}>
+                  <Select
+                    value={profileData.gender}
+                    onValueChange={(value) =>
+                      setProfileData((prev) => ({ ...prev, gender: value }))
+                    }
+                  >
                     <SelectTrigger className="bg-gray-800 border-gray-600 text-white">
                       <SelectValue placeholder="Select gender" />
                     </SelectTrigger>
@@ -176,12 +215,14 @@ export default function Profile() {
                       <SelectItem value="male">Male</SelectItem>
                       <SelectItem value="female">Female</SelectItem>
                       <SelectItem value="other">Other</SelectItem>
-                      <SelectItem value="prefer-not-to-say">Prefer not to say</SelectItem>
+                      <SelectItem value="prefer-not-to-say">
+                        Prefer not to say
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 ) : (
                   <Input
-                    value={profileData.gender || 'Not set'}
+                    value={profileData.gender || "Not set"}
                     disabled
                     className="bg-gray-800 border-gray-600 text-white disabled:opacity-50"
                   />
@@ -190,12 +231,16 @@ export default function Profile() {
 
               {/* Age */}
               <div className="space-y-2">
-                <Label htmlFor="age" className="text-gray-300">Age</Label>
+                <Label htmlFor="age" className="text-gray-300">
+                  Age
+                </Label>
                 <Input
                   id="age"
                   type="number"
                   value={profileData.age}
-                  onChange={(e) => setProfileData(prev => ({ ...prev, age: e.target.value }))}
+                  onChange={(e) =>
+                    setProfileData((prev) => ({ ...prev, age: e.target.value }))
+                  }
                   disabled={!isEditing}
                   className="bg-gray-800 border-gray-600 text-white disabled:opacity-50"
                 />
@@ -206,7 +251,15 @@ export default function Profile() {
                 <Label className="text-gray-300">Phone Number</Label>
                 <div className="flex gap-2">
                   {isEditing ? (
-                    <Select value={profileData.country_code} onValueChange={(value) => setProfileData(prev => ({ ...prev, country_code: value }))}>
+                    <Select
+                      value={profileData.country_code}
+                      onValueChange={(value) =>
+                        setProfileData((prev) => ({
+                          ...prev,
+                          country_code: value,
+                        }))
+                      }
+                    >
                       <SelectTrigger className="w-24 bg-gray-800 border-gray-600 text-white">
                         <SelectValue />
                       </SelectTrigger>
@@ -227,7 +280,12 @@ export default function Profile() {
                   )}
                   <Input
                     value={profileData.phone}
-                    onChange={(e) => setProfileData(prev => ({ ...prev, phone: e.target.value }))}
+                    onChange={(e) =>
+                      setProfileData((prev) => ({
+                        ...prev,
+                        phone: e.target.value,
+                      }))
+                    }
                     disabled={!isEditing}
                     placeholder="Phone number"
                     className="flex-1 bg-gray-800 border-gray-600 text-white disabled:opacity-50"
@@ -237,7 +295,9 @@ export default function Profile() {
 
               {/* Email */}
               <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="email" className="text-gray-300">Email</Label>
+                <Label htmlFor="email" className="text-gray-300">
+                  Email
+                </Label>
                 <Input
                   id="email"
                   type="email"
@@ -245,7 +305,9 @@ export default function Profile() {
                   disabled
                   className="bg-gray-800 border-gray-600 text-white disabled:opacity-50"
                 />
-                <p className="text-xs text-gray-400">Email cannot be changed from this page</p>
+                <p className="text-xs text-gray-400">
+                  Email cannot be changed from this page
+                </p>
               </div>
             </div>
 
@@ -253,12 +315,12 @@ export default function Profile() {
             <div className="flex justify-between pt-6">
               <Button
                 variant="outline"
-                onClick={signOut}
+                onClick={handleSignOut}
                 className="border-red-500 text-red-400 hover:bg-red-950"
               >
                 Sign Out
               </Button>
-              
+
               <div className="flex gap-2">
                 {isEditing ? (
                   <>
@@ -275,7 +337,7 @@ export default function Profile() {
                       className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
                     >
                       <Save className="w-4 h-4 mr-2" />
-                      {isSaving ? 'Saving...' : 'Save Changes'}
+                      {isSaving ? "Saving..." : "Save Changes"}
                     </Button>
                   </>
                 ) : (
