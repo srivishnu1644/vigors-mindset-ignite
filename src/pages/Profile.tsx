@@ -49,7 +49,6 @@ export default function Profile() {
 
   const handleSave = async () => {
     if (!user) return;
-
     setIsSaving(true);
     try {
       const { error } = await supabase.auth.updateUser({
@@ -320,7 +319,6 @@ export default function Profile() {
               >
                 Sign Out
               </Button>
-
               <div className="flex gap-2">
                 {isEditing ? (
                   <>

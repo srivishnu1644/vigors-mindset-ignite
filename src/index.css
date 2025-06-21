@@ -225,6 +225,7 @@
     color: hsl(var(--foreground));
   }
 
+
   /* Override autofill styles */
   input:-webkit-autofill,
   input:-webkit-autofill:hover,
@@ -260,3 +261,10 @@
     color: white !important;
   }
 }
+
+
+
+
+
+
+
