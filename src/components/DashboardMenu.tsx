@@ -124,7 +124,7 @@ export function DashboardMenu() {
           side="right"
           className="w-[300px] p-0 bg-gray-900 border-gray-700"
         >
-          <SheetHeader className="border-b px-6 py-4 bg-black/50">
+          <SheetHeader className="border-b border-gray-700 px-6 py-4 bg-gray-800">
             {!selectedMenu ? (
               <SheetTitle className="text-lg text-white flex items-center gap-2">
                 <Menu className="w-5 h-5" /> Menu
