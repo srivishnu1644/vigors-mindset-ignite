@@ -142,7 +142,7 @@ export function DashboardMenu() {
               </div>
             )}
           </SheetHeader>
-          <div className="p-6 space-y-2">
+          <div className="p-6 space-y-2 bg-gray-900">
             {!selectedMenu ? (
               <>
                 {MENU.map((item) => (
