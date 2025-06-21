@@ -225,9 +225,10 @@ export function Login({
 
               <Button
                 type="submit"
-                className="w-full bg-white/95 hover:bg-white text-black font-semibold py-3"
+                disabled={isLoading}
+                className="w-full bg-white/95 hover:bg-white text-black font-semibold py-3 disabled:opacity-50"
               >
-                Sign In
+                {isLoading ? "Signing In..." : "Sign In"}
               </Button>
             </form>
 
