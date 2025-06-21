@@ -23,7 +23,10 @@ export const PasswordInput = React.forwardRef<
     <div className="relative">
       <Input
         type={showPassword ? "text" : "password"}
-        className={cn("pr-10", className)}
+        className={cn(
+          "pr-10 autofill:bg-transparent autofill:text-current",
+          className,
+        )}
         ref={ref}
         {...props}
       />
