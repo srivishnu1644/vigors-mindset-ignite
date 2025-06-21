@@ -144,8 +144,63 @@ export function Signup({
       return;
     }
 
-    // If validation passes, proceed
-    onSignUp();
+    setIsLoading(true);
+
+    try {
+      const { error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
+            full_name: formData.fullName,
+          },
+        },
+      });
+
+      if (error) {
+        // Check if user already exists
+        if (
+          error.message.includes("User already registered") ||
+          error.message.includes("already been registered")
+        ) {
+          toast({
+            title: "Account Already Exists",
+            description:
+              "An account with this email already exists. Please sign in instead.",
+            variant: "destructive",
+            action: (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={onSignIn}
+                className="bg-blue-600 hover:bg-blue-700 border-blue-500"
+              >
+                Sign In
+              </Button>
+            ),
+          });
+          return;
+        }
+        throw error;
+      }
+
+      // Success
+      toast({
+        title: "Account Created Successfully!",
+        description:
+          "Welcome to The Vigors Club! Check your email to verify your account.",
+      });
+      onSignUp();
+    } catch (error: any) {
+      toast({
+        title: "Account Creation Failed",
+        description:
+          error.message || "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
