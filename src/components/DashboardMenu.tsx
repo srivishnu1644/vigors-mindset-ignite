@@ -120,7 +120,10 @@ export function DashboardMenu() {
         <Menu className="w-6 h-6" />
       </Button>
       <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent side="right" className="w-[300px] p-0">
+        <SheetContent
+          side="right"
+          className="w-[300px] p-0 bg-gray-900 border-gray-700"
+        >
           <SheetHeader className="border-b px-6 py-4 bg-black/50">
             {!selectedMenu ? (
               <SheetTitle className="text-lg text-white flex items-center gap-2">
