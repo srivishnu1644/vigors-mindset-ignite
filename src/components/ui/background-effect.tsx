@@ -54,6 +54,7 @@ export function BackgroundEffect() {
   return (
     <div className="absolute inset-0">
       <FloatingPaths position={1} />
+      <FloatingPaths position={-1} />
     </div>
   );
 }
