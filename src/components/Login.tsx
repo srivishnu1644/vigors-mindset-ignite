@@ -110,9 +110,8 @@ export function Login({
                 <Label htmlFor="password" className="text-white">
                   Password
                 </Label>
-                <Input
+                <PasswordInput
                   id="password"
-                  type="password"
                   placeholder="Enter your password"
                   className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40"
                 />
