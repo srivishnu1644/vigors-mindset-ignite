@@ -1,8 +1,14 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PasswordInput } from "@/components/ui/password-input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -17,12 +23,12 @@ export const Auth = () => {
     password: "",
     fullName: "",
     phone: "",
-    dateOfBirth: ""
+    dateOfBirth: "",
   });
 
   const [signInData, setSignInData] = useState({
     email: "",
-    password: ""
+    password: "",
   });
 
   const handleSignUp = async (e: React.FormEvent) => {
@@ -37,9 +43,9 @@ export const Auth = () => {
           data: {
             full_name: signUpData.fullName,
             phone: signUpData.phone,
-            date_of_birth: signUpData.dateOfBirth
-          }
-        }
+            date_of_birth: signUpData.dateOfBirth,
+          },
+        },
       });
 
       if (error) throw error;
@@ -91,7 +97,10 @@ export const Auth = () => {
       <Card className="w-full max-w-md bg-black/80 backdrop-blur-sm border-purple-500/20">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold text-white mb-2">
-            JOIN THE <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">VIGORS CLUB</span>
+            JOIN THE{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
+              VIGORS CLUB
+            </span>
           </CardTitle>
           <CardDescription className="text-gray-300">
             Transform your body, elevate your mind
@@ -103,7 +112,7 @@ export const Auth = () => {
               <TabsTrigger value="signup">Sign Up</TabsTrigger>
               <TabsTrigger value="signin">Sign In</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="signup">
               <form onSubmit={handleSignUp} className="space-y-4">
                 <div className="relative">
@@ -112,7 +121,9 @@ export const Auth = () => {
                     type="text"
                     placeholder="Full Name"
                     value={signUpData.fullName}
-                    onChange={(e) => setSignUpData({...signUpData, fullName: e.target.value})}
+                    onChange={(e) =>
+                      setSignUpData({ ...signUpData, fullName: e.target.value })
+                    }
                     className="pl-10 bg-gray-800 border-gray-600 text-white"
                     required
                   />
@@ -123,7 +134,9 @@ export const Auth = () => {
                     type="email"
                     placeholder="Email"
                     value={signUpData.email}
-                    onChange={(e) => setSignUpData({...signUpData, email: e.target.value})}
+                    onChange={(e) =>
+                      setSignUpData({ ...signUpData, email: e.target.value })
+                    }
                     className="pl-10 bg-gray-800 border-gray-600 text-white"
                     required
                   />
@@ -134,7 +147,9 @@ export const Auth = () => {
                     type="password"
                     placeholder="Password"
                     value={signUpData.password}
-                    onChange={(e) => setSignUpData({...signUpData, password: e.target.value})}
+                    onChange={(e) =>
+                      setSignUpData({ ...signUpData, password: e.target.value })
+                    }
                     className="pl-10 bg-gray-800 border-gray-600 text-white"
                     required
                   />
@@ -145,7 +160,9 @@ export const Auth = () => {
                     type="tel"
                     placeholder="Phone (optional)"
                     value={signUpData.phone}
-                    onChange={(e) => setSignUpData({...signUpData, phone: e.target.value})}
+                    onChange={(e) =>
+                      setSignUpData({ ...signUpData, phone: e.target.value })
+                    }
                     className="pl-10 bg-gray-800 border-gray-600 text-white"
                   />
                 </div>
@@ -155,20 +172,27 @@ export const Auth = () => {
                     type="date"
                     placeholder="Date of Birth"
                     value={signUpData.dateOfBirth}
-                    onChange={(e) => setSignUpData({...signUpData, dateOfBirth: e.target.value})}
+                    onChange={(e) =>
+                      setSignUpData({
+                        ...signUpData,
+                        dateOfBirth: e.target.value,
+                      })
+                    }
                     className="pl-10 bg-gray-800 border-gray-600 text-white"
                   />
                 </div>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
                   disabled={isLoading}
                 >
-                  {isLoading ? "Creating Account..." : "START YOUR TRANSFORMATION"}
+                  {isLoading
+                    ? "Creating Account..."
+                    : "START YOUR TRANSFORMATION"}
                 </Button>
               </form>
             </TabsContent>
-            
+
             <TabsContent value="signin">
               <form onSubmit={handleSignIn} className="space-y-4">
                 <div className="relative">
@@ -177,7 +201,9 @@ export const Auth = () => {
                     type="email"
                     placeholder="Email"
                     value={signInData.email}
-                    onChange={(e) => setSignInData({...signInData, email: e.target.value})}
+                    onChange={(e) =>
+                      setSignInData({ ...signInData, email: e.target.value })
+                    }
                     className="pl-10 bg-gray-800 border-gray-600 text-white"
                     required
                   />
@@ -188,13 +214,15 @@ export const Auth = () => {
                     type="password"
                     placeholder="Password"
                     value={signInData.password}
-                    onChange={(e) => setSignInData({...signInData, password: e.target.value})}
+                    onChange={(e) =>
+                      setSignInData({ ...signInData, password: e.target.value })
+                    }
                     className="pl-10 bg-gray-800 border-gray-600 text-white"
                     required
                   />
                 </div>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
                   disabled={isLoading}
                 >
