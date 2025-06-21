@@ -63,8 +63,46 @@ export function Login({
   onSignUp: () => void;
   onLogin: () => void;
 }) {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const { toast } = useToast();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate required fields
+    if (!formData.email.trim()) {
+      toast({
+        title: "Email Required",
+        description: "Please enter your email address to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!formData.password.trim()) {
+      toast({
+        title: "Password Required",
+        description: "Please enter your password to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // If validation passes, proceed
     onLogin();
   };
 
