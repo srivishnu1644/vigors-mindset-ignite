@@ -156,7 +156,24 @@ export const Auth = () => {
         password: signInData.password,
       });
 
-      if (error) throw error;
+      if (error) {
+        // Check if the error is because user doesn't exist
+        if (
+          error.message.includes("Invalid login credentials") ||
+          error.message.includes("User not found") ||
+          error.message.includes("Email not confirmed")
+        ) {
+          toast({
+            title: "Account Not Found",
+            description:
+              "No account found with this email. Please create an account first by switching to the Sign Up tab.",
+            variant: "destructive",
+          });
+          return;
+        }
+        // Other authentication errors
+        throw error;
+      }
 
       toast({
         title: "Welcome back, warrior!",
@@ -165,7 +182,8 @@ export const Auth = () => {
     } catch (error: any) {
       toast({
         title: "Sign in failed",
-        description: error.message,
+        description:
+          error.message || "An unexpected error occurred. Please try again.",
         variant: "destructive",
       });
     } finally {
