@@ -68,9 +68,10 @@ export function Login({
     email: "",
     password: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validate required fields
@@ -103,8 +104,59 @@ export function Login({
       return;
     }
 
-    // If validation passes, proceed
-    onLogin();
+    setIsLoading(true);
+
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (error) {
+        // Check if the error is because user doesn't exist
+        if (
+          error.message.includes("Invalid login credentials") ||
+          error.message.includes("User not found") ||
+          error.message.includes("Email not confirmed")
+        ) {
+          toast({
+            title: "Account Not Found",
+            description:
+              "No account found with this email. Please create an account first.",
+            variant: "destructive",
+            action: (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={onSignUp}
+                className="bg-purple-600 hover:bg-purple-700 border-purple-500"
+              >
+                Create Account
+              </Button>
+            ),
+          });
+          return;
+        }
+        // Other authentication errors
+        throw error;
+      }
+
+      // Success - proceed to welcome
+      toast({
+        title: "Welcome back!",
+        description: "Successfully signed in. Let's get started!",
+      });
+      onLogin();
+    } catch (error: any) {
+      toast({
+        title: "Sign In Failed",
+        description:
+          error.message || "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
