@@ -33,6 +33,56 @@ export const Auth = () => {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate required fields
+    if (!signUpData.fullName.trim()) {
+      toast({
+        title: "Full Name Required",
+        description: "Please enter your full name to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!signUpData.email.trim()) {
+      toast({
+        title: "Email Required",
+        description: "Please enter your email address to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!signUpData.password.trim()) {
+      toast({
+        title: "Password Required",
+        description: "Please create a password to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(signUpData.email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Password length validation
+    if (signUpData.password.length < 6) {
+      toast({
+        title: "Password Too Short",
+        description: "Password must be at least 6 characters long.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
