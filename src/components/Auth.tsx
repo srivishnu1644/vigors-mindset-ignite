@@ -208,9 +208,8 @@ export const Auth = () => {
                   />
                 </div>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                  <Input
-                    type="password"
+                  <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400 z-10" />
+                  <PasswordInput
                     placeholder="Password"
                     value={signInData.password}
                     onChange={(e) =>
