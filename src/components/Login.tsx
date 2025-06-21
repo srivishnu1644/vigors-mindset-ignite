@@ -142,7 +142,12 @@ export function Login({
                   id="email"
                   type="email"
                   placeholder="Enter your email"
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, email: e.target.value }))
+                  }
                   className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40"
+                  required
                 />
               </div>
 
@@ -153,7 +158,15 @@ export function Login({
                 <PasswordInput
                   id="password"
                   placeholder="Enter your password"
+                  value={formData.password}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      password: e.target.value,
+                    }))
+                  }
                   className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40"
+                  required
                 />
               </div>
 
